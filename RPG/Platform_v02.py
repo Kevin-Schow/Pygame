@@ -10,11 +10,10 @@ pygame.init() # Initiate Pygame
 pygame.display.set_caption('Platformer_v01') # Window Name
 
 WINDOW_SIZE = (400, 400) # Window Size
-
 # Initiates the window
 screen = pygame.display.set_mode(WINDOW_SIZE,0,32)
 
-player_image = pygame.image.load('C:/code/Pygame/RPG/Images/Link.jpg')
+player_image = pygame.image.load('C:/code/Pygame/RPG/Images/blue.png')
 
 moving_right = False
 moving_left = False
