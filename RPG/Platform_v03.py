@@ -42,6 +42,7 @@ in_game = True
 font = pygame.font.Font(None, 36)
 screen.blit(background, (0, 0))
 pygame.display.flip()
+
 while in_game:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -88,12 +89,6 @@ while in_game:
 
     player_rect.x = player_x_location # update rect x
     player_rect.y = player_y_location # update rect y
-
-    # test rect for collisions
-    if player_rect.colliderect(test_rect):
-        pygame.draw.rect(screen,(255,0,0),test_rect)
-    else:
-        pygame.draw.rect(screen,(0,0,0),test_rect)
 
     # test rect for collisions
     if player_rect.colliderect(test_rect):
