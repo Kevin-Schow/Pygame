@@ -8,7 +8,7 @@ screen = pygame.display.set_mode(WINDOW_SIZE, 0, 32)
 
 
 
-pygame.display.set_caption('Platformer_v01') # Window Name
+pygame.display.set_caption('Platformer_v07') # Window Name
 
  
 WHITE = (255, 255, 255)
@@ -31,6 +31,19 @@ character = pygame.image.load('C:/code/Pygame/RPG/Images/blue.png')
 grass_tile = pygame.image.load('C:/code/Pygame/RPG/Images/grass_tile.png')
 dirt_tile = pygame.image.load('C:/code/Pygame/RPG/Images/dirt_tile.png')
 TILE_SIZE = grass_tile.get_width()
+
+air_timer = 0
+player_x_momentum = 0
+player_y_momentum = 0
+player_max_speed = 5
+
+moving_right = False
+moving_left = False
+jump_movement_disabled = False
+in_game = True
+
+player_movement = [0, 0] # Velocity of Player ( Not position of player)
+
 
 player_rect = pygame.Rect(100,100,5,13)
 
@@ -89,30 +102,11 @@ def move(rect, movement, tiles):
 
 
 
-# Moving Left / Right
-moving_right = False
-moving_left = False
-
-# Momentum X / Y
-player_x_momentum = 0
-player_y_momentum = 0
-
-# Location X / Y
-# player_x_location = 50
-# player_y_location = 50
-
-player_max_speed = 5
-
-jump_movement_disabled = False
-
-player_movement = [0, 0] # Velocity of Player ( Not position of player)
 
 
 player_rect = pygame.Rect(50, 50, character.get_width(),character.get_height())
 test_rect = pygame.Rect(100,100,100,50)
 
-
-in_game = True
 font = pygame.font.Font(None, 36)
 display.blit(background, (0, 0))
 pygame.display.flip()
@@ -141,6 +135,10 @@ while in_game: # Game Loop
                 moving_right = True
             if event.key == pygame.K_a:
                 moving_left = True
+            if event.key == K_w:
+                if air_timer < 6:
+                    # vertical_momentum = -5
+                    player_y_momentum -= 5
         if event.type == KEYUP:
             if event.key == pygame.K_d:
                 moving_right = False

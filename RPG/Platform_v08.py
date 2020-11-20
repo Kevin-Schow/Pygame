@@ -1,17 +1,13 @@
 import pygame, sys
+from pygame.locals import *
 
 clock = pygame.time.Clock()
-
-from pygame.locals import *
 pygame.init() # initiates pygame
 
-pygame.display.set_caption('Pygame Platformer')
-
-WINDOW_SIZE = (600,400)
-
+pygame.display.set_caption('Platformer')
+WINDOW_SIZE = (1280,720)
 screen = pygame.display.set_mode(WINDOW_SIZE,0,32) # initiate the window
-
-display = pygame.Surface((300,200)) # used as the surface for rendering, which is scaled
+display = pygame.Surface((640,360)) # used as the surface for rendering, which is scaled
 
 moving_right = False
 moving_left = False
@@ -19,16 +15,6 @@ vertical_momentum = 0
 air_timer = 0
 
 true_scroll = [0,0]
-
-def load_map(path):
-    f = mapp
-    data = f.read()
-    f.close()
-    data = data.split('\n')
-    game_map = []
-    for row in data:
-        game_map.append(list(row))
-    return game_map
 
 mapp = [['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
             ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
@@ -55,15 +41,22 @@ game_map = mapp
 
 grass_img = pygame.image.load('C:/code/Pygame/RPG/Images/grass_tile.png')
 dirt_img = pygame.image.load('C:/code/Pygame/RPG/Images/dirt_tile.png')
-
-player_img = pygame.image.load('C:/code/Pygame/RPG/Images/blue.png').convert()
-player_img.set_colorkey((255,255,255))
+player_img = pygame.image.load('C:/code/Pygame/RPG/Images/blue.png') # .convert()
+# player_img.set_colorkey((255,255,255))
 
 player_rect = pygame.Rect(100,100,5,13)
 
-
-
 background_objects = [[0.25,[120,10,70,400]],[0.25,[280,30,40,400]],[0.5,[30,40,40,400]],[0.5,[130,90,100,400]],[0.5,[300,80,120,400]]]
+
+def load_map(path):
+    f = mapp
+    data = f.read()
+    f.close()
+    data = data.split('\n')
+    game_map = []
+    for row in data:
+        game_map.append(list(row))
+    return game_map
 
 def collision_test(rect,tiles):
     hit_list = []
@@ -151,18 +144,18 @@ while True: # game loop
             pygame.quit()
             sys.exit()
         if event.type == KEYDOWN:
-            if event.key == K_RIGHT:
+            if event.key == K_d:
                 moving_right = True
-            if event.key == K_LEFT:
+            if event.key == K_a:
                 moving_left = True
-            if event.key == K_UP:
+            if event.key == K_w:
                 if air_timer < 6:
                     # vertical_momentum = -5
                     vertical_momentum -= 5
         if event.type == KEYUP:
-            if event.key == K_RIGHT:
+            if event.key == K_d:
                 moving_right = False
-            if event.key == K_LEFT:
+            if event.key == K_a:
                 moving_left = False
         
     screen.blit(pygame.transform.scale(display,WINDOW_SIZE),(0,0))
