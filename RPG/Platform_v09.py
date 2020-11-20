@@ -29,6 +29,34 @@ def load_map(path):
         game_map.append(list(row))
     return game_map
 
+global animation_frames
+animation_frames = []
+def load_animations(path,frame_durations): # [7, 7]
+    global animation_frames
+    animations_name = path.split('/')[-1]
+    animation_frame_data = []
+    n = 0
+    for frame in frame_durations:
+        animation_frame_id = animation_name + '_' + str(n)
+        img_loc = path + '/' + animation_frame_id + '.png'
+        animation_image = pygame.image.loading(img_loc).convert()
+        # player_animation/idle/idle_0.png
+        animation_frames[animation_frame_id] = animation_image.copy()
+        for i in range(frame):
+            animation_frame_data.append(animation_frame_id)
+        n += 1
+    return animation_frame_data
+
+# # load_animation('C:/code/Pygame/RPG/Images/player_animation/idle', [7, 7, 40])
+
+animation_database = {}
+
+animation_database['run'] = load_animation('C:/code/Pygame/RPG/Images/player_animation/run', [7, 7])
+animation_database['idle'] = load_animation('C:/code/Pygame/RPG/Images/player_animation/idle', [7, 7, 40])
+
+player_action = 'idle'
+player_frame = 0
+
 game_map = load_map('C:/code/Pygame/RPG/Maps/map_02.txt')
 
 grass_img = pygame.image.load('C:/code/Pygame/RPG/Images/grass_tile.png')
