@@ -1,4 +1,4 @@
-import pygame, sys, os
+import pygame, sys
 
 clock = pygame.time.Clock()
 
@@ -21,7 +21,7 @@ air_timer = 0
 true_scroll = [0,0]
 
 def load_map(path):
-    f = open(path + '.txt','r')
+    f = mapp
     data = f.read()
     f.close()
     data = data.split('\n')
@@ -30,48 +30,38 @@ def load_map(path):
         game_map.append(list(row))
     return game_map
 
-global animation_frames
-animation_frames = {}
+mapp = [['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+            ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+            ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+            ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+            ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+            ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+            ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+            ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+            ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','2','2','0','0','0','0'],
+            ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+            ['0','0','0','0','0','0','0','2','2','2','2','2','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+            ['0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'],
+            ['2','2','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2'],
+            ['1','1','2','2','2','2','2','2','2','2','2','2','2','2','2','2','2','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+            ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+            ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+            ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+            ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+            ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1']]
 
-def load_animation(path,frame_durations):
-    global animation_frames
-    animation_name = path.split('/')[-1]
-    animation_frame_data = []
-    n = 0
-    for frame in frame_durations:
-        animation_frame_id = animation_name + '_' + str(n)
-        img_loc = path + '/' + animation_frame_id + '.png'
-        # player_animations/idle/idle_0.png
-        animation_image = pygame.image.load(img_loc).convert()
-        animation_image.set_colorkey((255,255,255))
-        animation_frames[animation_frame_id] = animation_image.copy()
-        for i in range(frame):
-            animation_frame_data.append(animation_frame_id)
-        n += 1
-    return animation_frame_data
 
-def change_action(action_var,frame,new_value):
-    if action_var != new_value:
-        action_var = new_value
-        frame = 0
-    return action_var,frame
-        
+game_map = mapp
 
-animation_database = {}
+grass_img = pygame.image.load('C:/code/Pygame/RPG/Images/grass_tile.png')
+dirt_img = pygame.image.load('C:/code/Pygame/RPG/Images/dirt_tile.png')
 
-animation_database['run'] = load_animation('player_animations/run',[7,7])
-animation_database['idle'] = load_animation('player_animations/idle',[7,7,40])
-
-game_map = load_map('map')
-
-grass_img = pygame.image.load('grass.png')
-dirt_img = pygame.image.load('dirt.png')
-
-player_action = 'idle'
-player_frame = 0
-player_flip = False
+player_img = pygame.image.load('C:/code/Pygame/RPG/Images/blue.png').convert()
+player_img.set_colorkey((255,255,255))
 
 player_rect = pygame.Rect(100,100,5,13)
+
+
 
 background_objects = [[0.25,[120,10,70,400]],[0.25,[280,30,40,400]],[0.5,[30,40,40,400]],[0.5,[130,90,100,400]],[0.5,[300,80,120,400]]]
 
@@ -145,15 +135,6 @@ while True: # game loop
     if vertical_momentum > 3:
         vertical_momentum = 3
 
-    if player_movement[0] == 0:
-        player_action,player_frame = change_action(player_action,player_frame,'idle')
-    if player_movement[0] > 0:
-        player_flip = False
-        player_action,player_frame = change_action(player_action,player_frame,'run')
-    if player_movement[0] < 0:
-        player_flip = True
-        player_action,player_frame = change_action(player_action,player_frame,'run')
-
     player_rect,collisions = move(player_rect,player_movement,tile_rects)
 
     if collisions['bottom'] == True:
@@ -162,12 +143,7 @@ while True: # game loop
     else:
         air_timer += 1
 
-    player_frame += 1
-    if player_frame >= len(animation_database[player_action]):
-        player_frame = 0
-    player_img_id = animation_database[player_action][player_frame]
-    player_img = animation_frames[player_img_id]
-    display.blit(pygame.transform.flip(player_img,player_flip,False),(player_rect.x-scroll[0],player_rect.y-scroll[1]))
+    display.blit(player_img,(player_rect.x-scroll[0],player_rect.y-scroll[1]))
 
 
     for event in pygame.event.get(): # event loop
@@ -181,7 +157,8 @@ while True: # game loop
                 moving_left = True
             if event.key == K_UP:
                 if air_timer < 6:
-                    vertical_momentum = -5
+                    # vertical_momentum = -5
+                    vertical_momentum -= 5
         if event.type == KEYUP:
             if event.key == K_RIGHT:
                 moving_right = False

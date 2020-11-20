@@ -49,6 +49,13 @@ def load_animations(path,frame_durations): # [7, 7]
 
 # # load_animation('C:/code/Pygame/RPG/Images/player_animation/idle', [7, 7, 40])
 
+def change_action(action_var, frame, new_value):
+    if action_var != new_value:
+        action_var = new_value
+        frame = 0
+    return action_var, frame
+
+
 animation_database = {}
 
 animation_database['run'] = load_animation('C:/code/Pygame/RPG/Images/player_animation/run', [7, 7])
@@ -56,12 +63,14 @@ animation_database['idle'] = load_animation('C:/code/Pygame/RPG/Images/player_an
 
 player_action = 'idle'
 player_frame = 0
+player_flip = False
 
 game_map = load_map('C:/code/Pygame/RPG/Maps/map_02.txt')
 
 grass_img = pygame.image.load('C:/code/Pygame/RPG/Images/grass_tile.png')
 dirt_img = pygame.image.load('C:/code/Pygame/RPG/Images/dirt_tile.png')
-player_img = pygame.image.load('C:/code/Pygame/RPG/Images/32x64.png') # .convert()
+
+# player_img = pygame.image.load('C:/code/Pygame/RPG/Images/32x64.png') # .convert()
 
 player_rect = pygame.Rect(100,100,player_img.get_width(),player_img.get_height())
 
@@ -139,6 +148,15 @@ while True: # game loop
     if vertical_momentum > 3:
         vertical_momentum = 3
 
+    if player_movement[0] > 0:
+        player_action, player_frame = change_action(player_action, player_frame, 'run')
+        player_flip = False
+    if player_movement[0] == 0:
+        player_action, player_frame = change_action(player_action, player_frame, 'idle')
+    if player_movement[0] < 0:
+        player_action, player_frame = change_action(player_action, player_frame, 'run')
+        player_flip = True
+
     player_rect,collisions = move(player_rect,player_movement,tile_rects)
 
     if collisions['bottom'] == True:
@@ -147,7 +165,12 @@ while True: # game loop
     else:
         air_timer += 1
 
-    display.blit(player_img,(player_rect.x-scroll[0],player_rect.y-scroll[1]))
+    player_frame += 1
+    if player_frame >= len(animation_database[player_action]):
+        player_frame = 0
+    player_img_id = animation_database[player_action][player_frame]
+    player_img = animation_frames[player_img_id]
+    display.blit(pygame.transform.flip(player_img, player_flip, False), (player_rect.x-scroll[0],player_rect.y-scroll[1]))
 
     for event in pygame.event.get(): # event loop
         if event.type == QUIT:
