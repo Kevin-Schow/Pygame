@@ -26,16 +26,27 @@ animation_name =''
 global player_img
 player_img = pygame.image.load('C:/code/Pygame/RPG/Images/32x64.png') # .convert()
 
+CHUNK_SIZE = 8
 
-def load_map(path):
-    f = open(path + '.txt','r')
-    data = f.read()
-    f.close()
-    data = data.split('\n')
-    game_map = []
-    for row in data:
-        game_map.append(list(row))
-    return game_map
+def generate_chunk(x, y):
+    chunk_data = []
+    for y_pos in range(CHUNK_SIZE):
+            for x_pos in range(CHUNK_SIZE):
+                target_x = x * CHUNK_SIZE + x_pos
+                target_y = y * CHUNK_SIZE + y_pos
+                tile_type = 0
+                if target_y > 10:
+                    tile_type = 2 # Dirt
+                elif target_y == 10:
+                    tile_type = 1 # Grass
+                elif target_y == 9:
+                    if random.randint(1, 5) == 1:
+                        tile_type = 3 # Plant
+                if tile_type != 0:
+                    chunk_data.append([[target_x, target_y], tile_type])
+    return chunk_data
+
+
 
 
 def load_animation(path,frame_durations): # [7, 7]
@@ -74,10 +85,20 @@ player_frame = 0
 grass_sound_timer = 0
 player_flip = False
 
-game_map = load_map('C:/code/Pygame/RPG/Maps/map_02.txt')
+# game_map = load_map('C:/code/Pygame/RPG/Maps/map_02.txt')
+game_map = {}
 
 grass_img = pygame.image.load('C:/code/Pygame/RPG/Images/grass_tile.png')
 dirt_img = pygame.image.load('C:/code/Pygame/RPG/Images/dirt_tile.png')
+plant_img = pygame.image.load('C:/code/Pygame/RPG/Images/plant_tile.png').convert()
+plant_img.set_colorkey((203, 217, 217))
+
+tile_index = {
+    1:grass_img,
+    2:dirt_img,
+    3:plant_img
+}
+
 
 jump_sound = pygame.mixer.Sound('C:/code/Pygame/RPG/Images/sound/jump.wav')
 grass_sounds = [pygame.mixer.Sound('C:/code/Pygame/RPG/Images/sound/grass_1.wav'), pygame.mixer.Sound('C:/code/Pygame/RPG/Images/sound/grass_2.wav')]
@@ -147,18 +168,21 @@ while True: # game loop
             pygame.draw.rect(display,(9,91,85),obj_rect)
 
     tile_rects = []
-    y = 0
-    for layer in game_map:
-        x = 0
-        for tile in layer:
-            if tile == '1':
-                display.blit(dirt_img,(x*SPRITE_SIZE-scroll[0],y*SPRITE_SIZE-scroll[1]))
-            if tile == '2':
-                display.blit(grass_img,(x*SPRITE_SIZE-scroll[0],y*SPRITE_SIZE-scroll[1]))
-            if tile != '0':
-                tile_rects.append(pygame.Rect(x*SPRITE_SIZE,y*SPRITE_SIZE,SPRITE_SIZE,SPRITE_SIZE))
-            x += 1
-        y += 1
+    # Tile Rendering
+    # Divide pixels on screen axis by pixels in chunk
+    # screen width / chunk size * sprite width
+    for y in range(3):
+        for x in range(4):
+            target_x = x - 1 + int(round(scroll[0]/CHUNK_SIZE*SPRITE_SIZE))
+            target_y = y - 1 + int(round(scroll[1]/CHUNK_SIZE*SPRITE_SIZE))
+            target_chunk = str(target_x) + ';' + str(target_y)
+            if target_chunk not in game_map:
+                game_map[target_chunk] = generate_chunk(target_x, target_y)
+            for tile in game_map[target_chunk]:
+                display.blit(tile_index[tile[1]],(tile[0][0] * SPRITE_SIZE - scroll[0], tile[0][1] * SPRITE_SIZE - scroll[1]))
+                if tile[1] in [1, 2]: # Add Tile to Physics
+                    tile_rects.append(pygame.Rect(tile[0][0] * SPRITE_SIZE, tile[0][1] * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE))
+
 
 
     player_movement = [0,0]
