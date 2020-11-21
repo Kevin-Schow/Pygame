@@ -171,6 +171,7 @@ while True: # game loop
     # Tile Rendering
     # Divide pixels on screen axis by pixels in chunk
     # screen width / chunk size * sprite width
+    # 8 * 32
     for y in range(3):
         for x in range(4):
             target_x = x - 1 + int(round(scroll[0]/CHUNK_SIZE*SPRITE_SIZE))
