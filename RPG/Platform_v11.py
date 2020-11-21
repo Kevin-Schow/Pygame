@@ -25,7 +25,6 @@ global player_img
 player_img = pygame.image.load('C:/code/Pygame/RPG/Images/32x64.png') # .convert()
 
 
-
 def load_map(path):
     f = open(path + '.txt','r')
     data = f.read()
@@ -47,7 +46,7 @@ def load_animation(path,frame_durations): # [7, 7]
         img_loc = path + '/' + animation_frame_id + '.png'
         # player_animation/idle/idle_0.png
         animation_image = pygame.image.load(img_loc).convert()
-        animation_image.set_colorkey((255,0,238))
+        animation_image.set_colorkey((203,217,217))
         animation_frames[animation_frame_id] = animation_image.copy()
         for i in range(frame):
             animation_frame_data.append(animation_frame_id)
@@ -65,7 +64,7 @@ def change_action(action_var, frame, new_value):
 
 animation_database = {}
 
-animation_database['run'] = load_animation('C:/code/Pygame/RPG/Images/player_animation/run', [7, 7])
+animation_database['run'] = load_animation('C:/code/Pygame/RPG/Images/player_animation/run', [11, 11])
 animation_database['idle'] = load_animation('C:/code/Pygame/RPG/Images/player_animation/idle', [7, 7, 40])
 
 player_action = 'idle'
@@ -76,6 +75,12 @@ game_map = load_map('C:/code/Pygame/RPG/Maps/map_02.txt')
 
 grass_img = pygame.image.load('C:/code/Pygame/RPG/Images/grass_tile.png')
 dirt_img = pygame.image.load('C:/code/Pygame/RPG/Images/dirt_tile.png')
+
+jump_sound = pygame.mixer.Sound('C:/code/Pygame/RPG/Images/sound/jump.wav')
+grass_sounds = [pygame.mixer.Sound('C:/code/Pygame/RPG/Images/sound/grass_1.wav'), pygame.mixer.Sound('C:/code/Pygame/RPG/Images/sound/grass_2.wav')]
+
+pygame.mixer.music.load('C:/code/Pygame/RPG/Images/sound/music.wav')
+pygame.mixer.music.play(-1)
 
 # player_img = pygame.image.load('C:/code/Pygame/RPG/Images/32x64.png') # .convert()
 
@@ -184,13 +189,15 @@ while True: # game loop
             pygame.quit()
             sys.exit()
         if event.type == KEYDOWN:
+            if event.key == K_m:
+                pygame.mixer.music.fadeout(1000)
             if event.key == K_d:
                 moving_right = True
             if event.key == K_a:
                 moving_left = True
             if event.key == K_w:
                 if air_timer < 6:
-                    # vertical_momentum = -5
+                    jump_sound.play()
                     vertical_momentum -= 5
         if event.type == KEYUP:
             if event.key == K_d:
