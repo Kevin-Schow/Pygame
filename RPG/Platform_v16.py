@@ -48,6 +48,21 @@ def generate_chunk(x,y):
                 chunk_data.append([[target_x,target_y],tile_type])
     return chunk_data
 
+class jumper_obj():
+    def __init__(self, loc):
+        self.loc = loc
+
+    def render(self, surf, scroll):
+        surf.blit(jumper_img, (self.loc[0] - scroll[0], self.loc[1] - scroll[1]))
+
+    def get_rect(self):
+        return pygame.Rect(self.loc[0], self.loc[1], 64, 16)
+
+    def collision_test(self, rect):
+        jumper_rect = self.get_rect()
+        return jumper_rect.colliderect(rect)
+
+
 # e.load_animations('data/images/entities/')
 e.load_animations('C:/code/Pygame/RPG/data/images/entities/')
 
@@ -59,6 +74,10 @@ grass_img = pygame.image.load('data/images/grass_tile.png')
 dirt_img = pygame.image.load('data/images/dirt_tile.png')
 plant_img = pygame.image.load('data/images/plant_tile.png').convert()
 plant_img.set_colorkey((203,217,217)) # colorkey
+
+jumper_img = pygame.image.load('data/images/jumper.png').convert()
+jumper_img.set_colorkey((203,217,217)) # colorkey
+
 
 tile_index = {1:grass_img,
               2:dirt_img,
@@ -81,6 +100,11 @@ player = e.entity(100,100, player_width, player_height,'player')
 
 
 background_objects = [[0.25,[120,10,70,400]],[0.25,[280,30,40,400]],[0.5,[30,40,40,400]],[0.5,[130,90,100,400]],[0.5,[300,80,120,400]]]
+
+jumper_objects = []
+
+for i in range(5):
+    jumper_objects.append(jumper_obj((random.randint(0, 600) - 500, 304)))
 
 while True: # game loop
     display.fill((146,244,255)) # clear screen by filling it with blue
@@ -148,6 +172,11 @@ while True: # game loop
 
     player.change_frame(1)
     player.display(display,scroll)
+
+    for jumper in jumper_objects:
+        jumper.render(display, scroll)
+        if jumper.collision_test(player.obj.rect):
+            vertical_momentum = -8
 
     for event in pygame.event.get(): # event loop
         if event.type == QUIT:
