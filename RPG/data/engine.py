@@ -2,7 +2,7 @@ import pygame, math, os
 from pygame.locals import *
 
 global e_colorkey
-e_colorkey = (255,255,255)
+e_colorkey = (203,217,217)
 
 def set_global_colorkey(colorkey):
     global e_colorkey
@@ -249,18 +249,33 @@ class entity(object):
                 image_to_render.set_alpha(self.alpha)
             # blit_center(surface,image_to_render,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y))
             
+            img = None
+
+
+
 
             mask = pygame.mask.from_surface(surface)
             mask_outline = mask.outline()
             mask_surf = pygame.Surface(surface.get_size())
-            img = self.get_current_img()
-            
-            for pixel in mask_outline:
-                image_to_render.set_at(pixel, pygame.Color(0, 0, 0))
-            mask_surf.set_colorkey((255, 255, 255))
+            image_outline = self.get_current_img()
+            # img = self.animation[0] + '_a'
+            img = flip(animation_database[self.animation[self.animation_frame] + '_a'],self.flip).copy()
+            print(type(image_to_render)) # pygame.Surface
+            print(type(self.animation[0])) # str
+            print(self.animation[0])
+            print(img)
+            print('eeeeeeeeeeeeeeeeeeee')
 
-            blit_center(surface, image_to_render,(int(self.x)-scroll[0]+self.offset[0]+center_x + 10,int(self.y)-scroll[1]+self.offset[1]+center_y))
-            blit_center(surface, image_to_render,(int(self.x)-scroll[0]+self.offset[0]+center_x - 10,int(self.y)-scroll[1]+self.offset[1]+center_y))
+
+
+
+            # for pixel in mask_outline:
+            #     img.set_at(pixel, (255, 0, 0))
+            # mask_surf.set_colorkey((0, 0, 0))
+
+
+            blit_center(surface, img,(int(self.x)-scroll[0]+self.offset[0]+center_x + 10,int(self.y)-scroll[1]+self.offset[1]+center_y))
+            blit_center(surface, img,(int(self.x)-scroll[0]+self.offset[0]+center_x - 10,int(self.y)-scroll[1]+self.offset[1]+center_y))
             blit_center(mask_surf, surface,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y+1))
             blit_center(mask_surf, surface,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y-1))
             
