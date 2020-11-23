@@ -234,7 +234,7 @@ class entity(object):
                 image_to_render.set_alpha(self.alpha)
             return image_to_render, center_x, center_y
  
-    def display(self,surface,scroll):
+    def display(self, surface, scroll):
         image_to_render = None
         if self.animation == None:
             if self.image != None:
@@ -247,20 +247,40 @@ class entity(object):
             image_to_render = pygame.transform.rotate(image_to_render,self.rotation)
             if self.alpha != None:
                 image_to_render.set_alpha(self.alpha)
+            # blit_center(surface,image_to_render,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y))
+            
+
+            mask = pygame.mask.from_surface(surface)
+            mask_outline = mask.outline()
+            mask_surf = pygame.Surface(surface.get_size())
+            img = self.get_current_img()
+            
+            for pixel in mask_outline:
+                image_to_render.set_at(pixel, pygame.Color(0, 0, 0))
+            mask_surf.set_colorkey((255, 255, 255))
+
+            blit_center(surface, image_to_render,(int(self.x)-scroll[0]+self.offset[0]+center_x + 10,int(self.y)-scroll[1]+self.offset[1]+center_y))
+            blit_center(surface, image_to_render,(int(self.x)-scroll[0]+self.offset[0]+center_x - 10,int(self.y)-scroll[1]+self.offset[1]+center_y))
+            blit_center(mask_surf, surface,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y+1))
+            blit_center(mask_surf, surface,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y-1))
+            
             blit_center(surface,image_to_render,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y))
 
 
-    def perfect_outline(self, img, loc, display):
-        mask = pygame.mask.from_surface(img)
-        mask_outline = mask.outline()
-        mask_surf = pygame.Surface(img.get_size())
-        for pixel in mask_outline:
-            mask_surf.set_at(pixel, (255, 255, 255))
-        mask_surf.set_colorkey((0, 0, 0))
-        display.blit(mask_surf, (loc[0]/4-1, loc[1]))
-        display.blit(mask_surf, (loc[0]+1, loc[1]))
-        display.blit(mask_surf, (loc[0], loc[1]-1))
-        display.blit(mask_surf, (loc[0], loc[1]+1))
+
+
+    # def perfect_outline(self, img, loc, display):
+    #     mask = pygame.mask.from_surface(img)
+    #     mask_outline = mask.outline()
+    #     mask_surf = pygame.Surface(img.get_size())
+    #     for pixel in mask_outline:
+    #         mask_surf.set_at(pixel, (255, 255, 255))
+    #     mask_surf.set_colorkey((0, 0, 0))
+    #     display.blit(mask_surf, (loc[0]-1, loc[1]))
+    #     display.blit(mask_surf, (loc[0]+1, loc[1]))
+    #     display.blit(mask_surf, (loc[0], loc[1]-1))
+    #     display.blit(mask_surf, (loc[0], loc[1]+1))
+
 
     # def perfect_outline(self, img, loc, display):
     #     mask = pygame.mask.from_surface(img)
