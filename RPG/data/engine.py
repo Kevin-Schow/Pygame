@@ -249,7 +249,7 @@ class entity(object):
                 image_to_render.set_alpha(self.alpha)
             # blit_center(surface,image_to_render,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y))
             
-            img = None
+
 
 
 
@@ -259,25 +259,20 @@ class entity(object):
             mask_surf = pygame.Surface(surface.get_size())
             image_outline = self.get_current_img()
             # img = self.animation[0] + '_a'
-            img = flip(animation_database[self.animation[self.animation_frame] + '_a'],self.flip).copy()
-            print(type(image_to_render)) # pygame.Surface
-            print(type(self.animation[0])) # str
-            print(self.animation[0])
-            print(img)
-            print('eeeeeeeeeeeeeeeeeeee')
+            outline_img = flip(animation_database[self.animation[self.animation_frame]],self.flip).copy()
 
 
 
+            # Outline -- Needs Fix
 
             # for pixel in mask_outline:
             #     img.set_at(pixel, (255, 0, 0))
-            # mask_surf.set_colorkey((0, 0, 0))
+            # img.set_colorkey((203, 217, 217))
 
-
-            blit_center(surface, img,(int(self.x)-scroll[0]+self.offset[0]+center_x + 10,int(self.y)-scroll[1]+self.offset[1]+center_y))
-            blit_center(surface, img,(int(self.x)-scroll[0]+self.offset[0]+center_x - 10,int(self.y)-scroll[1]+self.offset[1]+center_y))
-            blit_center(mask_surf, surface,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y+1))
-            blit_center(mask_surf, surface,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y-1))
+            # blit_center(surface, outline_img,(int(self.x)-scroll[0]+self.offset[0]+center_x + 10,int(self.y)-scroll[1]+self.offset[1]+center_y))
+            # blit_center(surface, outline_img,(int(self.x)-scroll[0]+self.offset[0]+center_x - 10,int(self.y)-scroll[1]+self.offset[1]+center_y))
+            # blit_center(surface, outline_img,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y+1))
+            # blit_center(surface, outline_img,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y-1))
             
             blit_center(surface,image_to_render,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y))
 
