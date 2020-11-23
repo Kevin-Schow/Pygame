@@ -248,7 +248,32 @@ class entity(object):
             if self.alpha != None:
                 image_to_render.set_alpha(self.alpha)
             blit_center(surface,image_to_render,(int(self.x)-scroll[0]+self.offset[0]+center_x,int(self.y)-scroll[1]+self.offset[1]+center_y))
- 
+
+
+    def perfect_outline(self, img, loc, display):
+        mask = pygame.mask.from_surface(img)
+        mask_outline = mask.outline()
+        mask_surf = pygame.Surface(img.get_size())
+        for pixel in mask_outline:
+            mask_surf.set_at(pixel, (255, 255, 255))
+        mask_surf.set_colorkey((0, 0, 0))
+        display.blit(mask_surf, (loc[0]/4-1, loc[1]))
+        display.blit(mask_surf, (loc[0]+1, loc[1]))
+        display.blit(mask_surf, (loc[0], loc[1]-1))
+        display.blit(mask_surf, (loc[0], loc[1]+1))
+
+    # def perfect_outline(self, img, loc, display):
+    #     mask = pygame.mask.from_surface(img)
+    #     mask_surf = mask.to_surface()
+    #     mask_surf.set_colorkey((0,0,0))
+    #     display.blit(mask_surf,(loc[0]-1,loc[1]))
+    #     display.blit(mask_surf,(loc[0]+1,loc[1]))
+    #     display.blit(mask_surf,(loc[0],loc[1]-1))
+    #     display.blit(mask_surf,(loc[0],loc[1]+1))
+
+
+
+
 # animation stuff
 
 global animation_database
